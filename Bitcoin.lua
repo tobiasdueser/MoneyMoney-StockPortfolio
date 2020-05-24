@@ -1,14 +1,15 @@
--- Inofficial Bitcoin Extension for MoneyMoney
--- Fetches Bitcoin quantity for addresses via blockexplorer API
--- Fetches Bitcoin price in EUR via coinmarketcap API
--- Returns cryptoassets as securities
+-- Inofficial StockPortfolio Extension for MoneyMoney
+-- Fetches Stock price via finnhub.io API
+-- Fetches Current EUR/US exchange rate via exchangeratesapi.io API
+-- Returns stocks as securities
 --
--- Username: Bitcoin Adresses comma seperated
--- Password: [Whatever]
+-- Username: Stock symbol comma seperated with number of shares in brackets (Example: "AAPL(0.7),TSLA(1.5)")
+-- Password: Finnhub API-Key
 
 -- MIT License
 
--- Copyright (c) 2017 Jacubeit
+-- Original work Copyright (c) 2017 Jacubeit
+-- Modified work Copyright 2020 tobiasdueser
 
 -- Permission is hereby granted, free of charge, to any person obtaining a copy
 -- of this software and associated documentation files (the "Software"), to deal
@@ -30,27 +31,30 @@
 
 
 WebBanking{
-  version = 0.2,
-  description = "Include your Bitcoins as cryptoportfolio in MoneyMoney by providing Bitcoin addresses as usernme (comma seperated) and a random Password",
-  services= { "Bitcoin" }
+  version = 1.0,
+  country = "de",
+  description = "Include your stock portfolio in MoneyMoney by providing the stock symbols and the number of shares as username [Example: AAPL(0.3),SHOP(1.4)] and a free Finnhub API-Key as password.",
+  services= { "StockPortfolio" }
 }
 
-local bitcoinAddress
+local stockSymbols
 local connection = Connection()
-local currency = "EUR" -- fixme: make dynamik if MM enables input field
+local currency = "EUR"
+local finnhubToken
 
 function SupportsBank (protocol, bankCode)
-  return protocol == ProtocolWebBanking and bankCode == "Bitcoin"
+  return protocol == ProtocolWebBanking and bankCode == "StockPortfolio"
 end
 
 function InitializeSession (protocol, bankCode, username, username2, password, username3)
-  bitcoinAddress = username:gsub("%s+", "")
+  stockSymbols = username:gsub("%s+", "")
+  finnhubToken = password
 end
 
 function ListAccounts (knownAccounts)
   local account = {
-    name = "Bitcoin",
-    accountNumber = "Bitcoin",
+    name = "StockPortfolio",
+    accountNumber = "StockPortfolio",
     currency = currency,
     portfolio = true,
     type = "AccountTypePortfolio"
@@ -61,18 +65,25 @@ end
 
 function RefreshAccount (account, since)
   local s = {}
-  prices = requestBitcoinPrice()
+  -- get EUR -> USD exchange Rate
+  EURtoUSDexchangeRate = requestCurrentExchangeRate()
 
-  for address in string.gmatch(bitcoinAddress, '([^,]+)') do
-    bitcoinQuantity = requestBitcoinQuantityForBitcoinAddress(address)
+  for stock in string.gmatch(stockSymbols, '([^,]+)') do
+
+    -- Pattern: AAPL(0.3),SHOP(1.4)
+    quantity=stock:match("%((%S+)%)")
+    stockName=stock:match('([^(]+)')
+
+    -- request current stock price and convert from USD to EUR
+    currentStockPrice = requestCurrentStockPrice(stockName) / EURtoUSDexchangeRate
 
     s[#s+1] = {
-      name = address,
+      name = stockName,
       currency = nil,
-      market = "cryptocompare",
-      quantity = bitcoinQuantity,
-      price = prices["price_eur"],
+      quantity = quantity,
+      price = currentStockPrice,
     }
+
   end
 
   return {securities = s}
@@ -82,32 +93,25 @@ function EndSession ()
 end
 
 
--- Querry Functions
-function requestBitcoinPrice()
-  response = connection:request("GET", cryptocompareRequestUrl(), {})
+-- Query Functions
+function requestCurrentStockPrice(stockSymbol)
+  response = connection:request("GET", stockPriceRequestUrl(stockSymbol), {})
   json = JSON(response)
-
-  return json:dictionary()[1]
+  return json:dictionary()["c"]
 end
 
-function requestBitcoinQuantityForBitcoinAddress(bitcoinAddress)
-  response = connection:request("GET", bitcoinRequestUrl(bitcoinAddress), {})
+function requestCurrentExchangeRate()
+  response = connection:request("GET", exchangeRateRequestUrl(), {})
   json = JSON(response)
-  balance = json:dictionary()['data']['confirmed_balance']
-  return balance
+  return json:dictionary()["rates"] ["USD"]
 end
 
 
 -- Helper Functions
--- function convertSatoshiToBitcoin(satoshi)
---   return satoshi / 100000000
--- end
-
-function cryptocompareRequestUrl()
-  return "https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=EUR"
+function stockPriceRequestUrl(stockSymbol)
+  return "https://finnhub.io/api/v1/quote?symbol=" .. stockSymbol .. "&token=" .. finnhubToken
 end
 
-function bitcoinRequestUrl(bitcoinAddress)
-  return "https://chain.so/api/v2/get_address_balance/BTC/" .. bitcoinAddress .. "/"
+function exchangeRateRequestUrl()
+  return "https://api.exchangeratesapi.io/latest?symbols=USD,GBP"
 end
-

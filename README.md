@@ -1,27 +1,27 @@
-# Bitcoin-MoneyMoney
-Fetches amount and value of privately held Bitcoin address via blockexplorer and returns it as a security.  
-This can be also be used to track your cold storage.
+# StockPortfolio for MoneyMoney
+Create a custom stock portfolio and fetch the current stock value via finnhub.io
 
-![MoneyMoney screenshot with Bitcoin Balance](screens/bitcoin-balance.png)
+![MoneyMoney screenshot with StockPortfolio Balance](screens/StockPortfolio-balance.png)
 
 ## Extension Setup
 
-You can get a signed version of this extension from
+1. Download the extension via the [GitHub releases page](https://github.com/Jacubeit/Bitcoin-MoneyMoney/releases/tag/v0.1)
+2. Once downloaded, move `StockPortfolio.lua` to your MoneyMoney Extensions folder.
+3. Create a free [finnhub.io](https://finnhub.io/) account and copy the API-key from [finnhub.io/dashboard](https://finnhub.io/dashboard)
 
-* my [GitHub releases page](https://github.com/Jacubeit/Bitcoin-MoneyMoney/releases/tag/v0.1), or
-* the [MoneyMoney Extensions](https://moneymoney-app.com/extensions/) page
-
-Once downloaded, move `Bitcoin.lua` to your MoneyMoney Extensions folder.
-
-**Note:** This extension requires MoneyMoney **Version 2.2.19** or newer.
+Currently the extension is not signed by MoneyMoney, so you have to disable verification in the settings.
 
 ## MoneyMoney Setup
 
-Add a new account (type "Bitcoin"). 
+Add a new account (type "StockPortfolio").
 
-**Use your Bitcoin adresses coma seperated as user name**  
-`1KuWLoZuoJgz3N6sLoAwGth9XGm8YuFTGt, 1KuWLoZuoJgz3N6sLoAwGth9XGm8YuFTGt` (example)
+**Use the stock symbols comma seperated with the number of shares in brackets as user name**
+`AAPL(0.7),TSLA(1.5)` (example)
 
-**Use whatever you want as password**  
-`123` (example)
+**Use free Finnhub API key as password**
+`5r8ufep1br56mlvrhj6g` (example)
 
+![MoneyMoney screenshot with StockPortfolio Setup](screens/StockPortfolio-setup.png)
+
+### Bonus
+Add buying rate via MoneyMoney (Right click on stock) to display the profit.
