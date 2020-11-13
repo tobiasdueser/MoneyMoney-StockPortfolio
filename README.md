@@ -5,7 +5,7 @@ Create a custom portfolio with US stocks and fetch the current stock value via f
 
 ## Setup
 
-1. Download the extension via the [GitHub releases page](https://github.com/tobiasdueser/MoneyMoney-StockPortfolio/releases/tag/v1.0)
+1. Download the extension via the [GitHub releases page](https://github.com/tobiasdueser/MoneyMoney-StockPortfolio/releases/tag/v1.1)
 2. Once downloaded, move `StockPortfolio.lua` to your MoneyMoney Extensions folder.
 3. Create a free [finnhub.io](https://finnhub.io/) account and copy the API-key from [finnhub.io/dashboard](https://finnhub.io/dashboard)
 4. Add a new account with the type `StockPortfolio`
