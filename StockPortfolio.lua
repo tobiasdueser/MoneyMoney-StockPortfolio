@@ -115,3 +115,5 @@ end
 function exchangeRateRequestUrl()
   return "https://api.exchangeratesapi.io/latest?symbols=USD,GBP"
 end
+
+-- SIGNATURE: MCwCFFz66gbK9vbTX4zhuTIXXs+VYi3DAhQN+zPkvtErPy0wYPOYSEQ7Vf7u8A==
