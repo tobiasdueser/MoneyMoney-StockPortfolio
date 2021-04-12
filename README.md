@@ -14,7 +14,12 @@ Create a custom portfolio with US stocks and fetch the current stock value via f
 
 ![MoneyMoney screenshot with StockPortfolio Setup](screens/StockPortfolio-setup.png)
 
-### Bonus
+### Adding, editing and removing stocks
+1. Right click on `StockPortfolio` in sidebar
+2. Click `Edit login data...`
+3. Edit and save
+
+### Bonus: Display profits
 Add the buying rates in MoneyMoney via right click on the stock to display the profits.
 
 ### Requirements
