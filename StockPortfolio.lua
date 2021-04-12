@@ -31,7 +31,7 @@
 
 
 WebBanking{
-  version = 1.0,
+  version = 1.2,
   country = "de",
   description = "Include your stock portfolio in MoneyMoney by providing the stock symbols and the number of shares as username [Example: AAPL(0.3),SHOP(1.4)] and a free Finnhub API-Key as password.",
   services= { "StockPortfolio" }
@@ -103,7 +103,7 @@ end
 function requestCurrentExchangeRate()
   response = connection:request("GET", exchangeRateRequestUrl(), {})
   json = JSON(response)
-  return json:dictionary()["rates"] ["USD"]
+  return json:dictionary()["quote"] ["USD"]
 end
 
 
@@ -113,7 +113,7 @@ function stockPriceRequestUrl(stockSymbol)
 end
 
 function exchangeRateRequestUrl()
-  return "https://api.exchangeratesapi.io/latest?symbols=USD,GBP"
+  return "https://finnhub.io/api/v1/forex/rates?token=" .. finnhubToken
 end
 
--- SIGNATURE: MCwCFFz66gbK9vbTX4zhuTIXXs+VYi3DAhQN+zPkvtErPy0wYPOYSEQ7Vf7u8A==
+-- SIGNATURE: MCwCFHEGkcStGB9rZlQ3BKEVaK+GIHsoAhQY5fMKh3XnJjlM5NU8b1xfqCM9nA==
