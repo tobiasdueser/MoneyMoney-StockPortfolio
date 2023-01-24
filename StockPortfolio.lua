@@ -103,7 +103,7 @@ end
 function requestCurrentExchangeRate()
   response = connection:request("GET", exchangeRateRequestUrl(), {})
   json = JSON(response)
-  return json:dictionary()["quote"] ["USD"]
+  return json:dictionary()["eur"] ["inverseRate"]
 end
 
 
@@ -113,7 +113,6 @@ function stockPriceRequestUrl(stockSymbol)
 end
 
 function exchangeRateRequestUrl()
-  return "https://finnhub.io/api/v1/forex/rates?token=" .. finnhubToken
+  return "https://www.floatrates.com/daily/usd.json"
 end
 
--- SIGNATURE: MCwCFHEGkcStGB9rZlQ3BKEVaK+GIHsoAhQY5fMKh3XnJjlM5NU8b1xfqCM9nA==
